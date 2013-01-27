@@ -1,0 +1,763 @@
+
+<html>
+<!--Javascript starts here -->
+<SCRIPT language=JavaScript type=text/javascript>
+    <!--
+	
+    var msg=   ['This assessment is based on adult population with normal count range of 1.35 to 3.5 E+09/liter.',
+                'Cannot make estimate using kinetic method.  Data in the normal range is consistent with zero Gy dose estimate.',
+                'Make additional measurements every 6-8 hours for several days.',
+               	'There is evidence of exposure, but a kinetic dose estimate cannot be made using the lymphocyte data.',
+		'If not already done, make additional measurements every 6-8 hours for several days.  Then use the Multi-Sample Dose Estimate method to determine dose.',
+                'Lymphocyte data is consistent with background or exposure of 0 Gy (i.e., no exposure).  This estimate has poor reliability.  Draw serial blood samples and make additional measurements.',
+                'Data is consistent with zero Gy dose estimate.'];
+
+    function computetimelapse(date1, date2, time1, time2) 
+	{
+        var timestr1= date1 + " " + time1 + ":00";
+        var timestr2= date2 + " " + time2 + ":00";
+        var d1=new Date(timestr1);
+        var d2=new Date(timestr2);
+        var minutes=1000*60;
+        var diff=(d2.getTime() - d1.getTime())/minutes;
+           
+        return diff;
+    }
+		
+		
+  function lymphocyte1dose(formname)
+    {
+      var k;
+      var totaldays;
+      var dose;
+
+      
+      var lapse = computetimelapse(document.lymphform.date2x.value, document.lymphform.date2xx.value, document.lymphform.hour2x.value, document.lymphform.hour2xx.value); /* returns minutes */
+      if (lapse <= 0) {
+        alert("Blood sample  must be taken after the time of exposure.");
+        return;
+      }
+      else if (!lapse) {
+        alert("Time format is not correct.");
+        return;
+      }
+   
+
+      var day=24 * 60;
+  
+      if (formname.L1.value=="" ) {
+         alert ("Enter a value for lymphocyte count.");
+         return;
+      }
+
+/*
+         if (formname.dayvalue.value=="")
+            formname.dayvalue.value="0";
+         if (formname.hourvalue.value=="")
+            formname.hourvalue.value="0";
+
+         while (formname.dayvalue.value !="0" && formname.dayvalue.value.indexOf('0')==0)
+           formname.dayvalue.value=formname.dayvalue.value.substring(1);
+
+         while (formname.hourvalue.value !="0" && formname.hourvalue.value.indexOf('0')==0)
+           formname.hourvalue.value=formname.hourvalue.value.substring(1);
+
+         if (formname.dayvalue.value=="0" && formname.hourvalue.value=="0"){
+            alert("Enter a value for Time interval.");
+            return;
+         }
+         totaldays=(parseFloat(formname.dayvalue.value)*24 + parseFloat(formname.hourvalue.value))/24;
+*/
+         totaldays = parseFloat(lapse)/day;
+        
+         if (formname.L1.value <0.007 || formname.L1.value >7)
+             alert ("Lymphocyte count is out of range.");
+         else if (totaldays > 11)
+             alert ("Time interval is out of range.");
+
+         else {
+
+	   if(formname.L1.value>=5)
+             alert ("Warning: Lymphocyte count must be less than 5.0E+09 to make estimate.");
+           else if (formname.L1.value >1.35) 
+             alert (msg[6] + " " + msg[0] + " " + msg[4]);
+           else 
+		   {
+             dose=(0.14848 - (Math.log(formname.L1.value)/Math.log(10)))/(0.116655+(0.1355311 * (tanh((totaldays-2.45501)/3.17703))));
+             
+             if(dose <1.5)
+			 {
+                formname.lymphdose.value="0";
+  			    document.lymphform.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  
+				
+			 }
+             else if (dose >10)
+			 {
+                formname.lymphdose.value=">10";
+				document.lymphform.treatmentpage.value="treatment10gy.html";						
+			 }
+             else
+			 {
+				formname.lymphdose.value= roundNumber(dose,1);
+				doseTreatment = roundNumber(formname.lymphdose.value,0);
+				if (doseTreatment >=10) {
+				  document.lymphform.treatmentpage.value="treatment10gy.html";		  
+				}
+				else if (doseTreatment >= 9) {
+				  document.lymphform.treatmentpage.value="treatment9gy.html";		  		  
+				}
+				else if (doseTreatment >= 8) {
+				  document.lymphform.treatmentpage.value="treatment8gy.html";			  
+				}
+				else if (doseTreatment >= 7) {
+				  document.lymphform.treatmentpage.value="treatment7gy.html";			  		  
+				}
+				else if (doseTreatment >= 6) {
+				  document.lymphform.treatmentpage.value="treatment6gy.html";			  		  		  
+				}
+				else if (doseTreatment >= 5) {
+				  document.lymphform.treatmentpage.value="treatment5gy.html";			  		  		  
+				}
+				else if (doseTreatment >= 4) {
+				  document.lymphform.treatmentpage.value="treatment4gy.html";			  		  		  		  
+				}
+				else if (doseTreatment >= 3) {
+				  document.lymphform.treatmentpage.value="treatment3gy.html";			  		  		  		  		  
+				}
+				else if (doseTreatment >= 2) {
+				  document.lymphform.treatmentpage.value="treatment2gy.html";			  		  		  		  		  
+				}
+				else if (doseTreatment >= 1) {
+				  document.lymphform.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  
+				}				
+				
+			 }
+           }
+          
+
+
+         }
+       
+
+
+   }
+
+		
+	function lymphocyte2dose(formname)
+    {
+
+      var k;
+      var totaldays3;
+      var totaldays2;
+      var totaldays1;
+      var timeinterval;
+      var dose;
+      var lym1;
+      var lym2;
+      var lym3;
+      var count=0;
+      var lymphArray=new Array();
+      var dateArray=new Array();
+      var sum_x=0;
+      var sum_y=0;
+      var sum_xy =0;
+      var sum_x2=0;
+      var sum_gus_xy=0;
+      var sum_gus_x2=0;
+      var sum_gus_y2=0;
+      var cl_t_Array = new Array();
+
+      cl_t_Array[0] = 0;
+      cl_t_Array[1] = 12.706;
+      cl_t_Array[2]=4.303;
+      cl_t_Array[3]=3.182;
+
+
+      formname.lymphdose.value="";
+      formname.CL.value="";
+
+         if (formname.L1.value=="") {
+             if (formname.L2.value=="" && formname.L3.value=="") {
+                alert ("Enter a value for lymphocyte count.");
+                return false;
+             }
+             else {
+                alert("If there is only one blood count report, enter the data in the first box.");
+                return false;
+             }
+         
+         }
+         else if (formname.L1.value !="" ) {
+             if (formname.L2.value=="" && formname.L3.value=="") {
+                lymphocyte1dose(formname);
+                
+                return;
+             }
+             else if (formname.L2.value!="" && formname.L3.value=="") {
+                count=2;
+                lymphArray[0]=parseFloat(formname.L1.value);
+                lymphArray[1]=parseFloat(formname.L2.value);
+ 
+             }
+             else if (formname.L2.value=="" && formname.L3.value!="") {
+                alert ("If there are only 2 blood counts, enter the data in the first 2 boxes.");
+                return false;
+             }
+             else {
+                count=3;
+                lymphArray[0]=parseFloat(formname.L1.value);
+                lymphArray[1]=parseFloat(formname.L2.value);
+                lymphArray[2]=parseFloat(formname.L3.value);
+             }
+         }
+         
+
+       var lapse1 = computetimelapse(document.lymphform.date2x.value, document.lymphform.date2xx.value, document.lymphform.hour2x.value, document.lymphform.hour2xx.value); /* returns minutes */
+       var lapse2 = computetimelapse(document.lymphform.date2x.value, document.lymphform.date2xxx.value, document.lymphform.hour2x.value, document.lymphform.hour2xxx.value); /* returns minutes */
+
+       if (lapse1<=0 || lapse2<=0) {
+          alert ("Blood sample must be taken after the time of exposure.");
+          return;
+       }
+       else if (lapse1==lapse2) {
+          alert("For multisample prediction, all measurements cannot have same time.  Unable to obtain multisample estimate from your lymphocyte data.  Draw serial blood samples and make additional measurements.");
+          return;
+
+       }
+       else if (!lapse1 || !lapse2) {
+          alert("Time format is not correct.");
+          return;
+       }
+          
+       if (count==3) {
+           var lapse3 = computetimelapse(document.lymphform.date2x.value, document.lymphform.date2xxxx.value, document.lymphform.hour2x.value, document.lymphform.hour2xxxx.value); /* returns minutes */
+           if (lapse1==lapse2 && lapse2 == lapse3) {
+             alert("For multisample prediction, all measurements cannot have same time.  Unable to obtain multisample estimate from your lymphocyte data.  Draw serial blood samples and make additional measurements.");
+             return;
+           }
+           else if (!lapse1 || !lapse2 || !lapse3) {
+             alert("Time format is not correct.");
+             return;
+           }
+            
+       }
+       var day = 24 * 60;
+       totaldays1=parseFloat(lapse1)/day;
+       totaldays2=parseFloat(lapse2)/day;
+ 
+       dateArray[0]=totaldays1;
+       dateArray[1]=totaldays2;
+       if (count==3) {
+          totaldays3=parseFloat(lapse3)/day;
+          dateArray[2]=totaldays3;
+       }
+
+
+        for (var i=0; i< count; i++) {
+           if (lymphArray[i] < 0.007 || lymphArray[i] > 7) {
+               alert("Lymphocyte count is out of range.");
+               return false;
+           }
+        }
+
+        for(i=0; i< count; i++) {
+           if(dateArray[i] > 11){
+              alert("Time interval is out of range.");
+              return false;
+           }
+        }
+       
+
+           for (i=0; i<count; i++) {
+              if (lymphArray[i]< 1.35 || lymphArray[i]>5)  
+                  break;
+           }
+           for (var j=0; j<count; j++) {
+              if (dateArray[i]>=1.5)
+                  break;
+           }
+ 
+           if (i==count && j==count)
+              alert(msg[1] + " " + msg[2] + " " + msg[0]);
+     
+           else {
+ 
+           lym1=lymphArray[0];
+           lym2=lymphArray[1];
+            
+             /* BHAT */   
+
+            for (i=0; i< count; i++) {
+               sum_x += dateArray[i];
+               sum_y += lymphArray[i];
+               sum_xy += (lymphArray[i] * dateArray[i]);
+               sum_x2 += Math.pow(dateArray[i], 2);
+            }
+     
+
+            dose= ((sum_x * sum_y) - (count * sum_xy)) / ( Math.pow(sum_x, 2) - (count * sum_x2) );
+           
+           
+             if (dose >=0)  {
+                if ((lym1+lym2)/2 < 1)
+                   alert(msg[3]);
+                else
+                   alert(msg[5]);
+             }
+             else {
+               
+                /* AHAT */
+
+                dose = (sum_y/count) - ((dose * sum_x)/count);
+
+                               
+                if (dose <1.5) { /*Guskova*/
+                  /*  alert ("Guskova"); */
+
+                    for (i=0; i<count; i++) {
+                       sum_gus_x2 += Math.pow((0.116655 + (0.1355311 * (tanh((dateArray[i]-2.45501)/3.17703)))),2);
+                       sum_gus_y2 += Math.pow((0.14848 - Math.log(lymphArray[i])/Math.log(10)), 2);
+                       sum_gus_xy += (0.116655 + (0.1355311 * (tanh((dateArray[i]-2.45501)/3.17703)))  )* (0.14848 - Math.log(lymphArray[i])/Math.log(10));
+
+                    }
+                    dose = sum_gus_xy / sum_gus_x2;
+
+                  
+                     if (dose <1)
+					 {
+					   formname.lymphdose.value="0";
+					   document.lymphform.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  					   
+					 }
+                     else if (dose > 10)
+					 {
+                       formname.lymphdose.value=">10";
+					   document.lymphform.treatmentpage.value="treatment10gy.html";		  					   
+					  }
+                     else 
+					 {  
+						formname.lymphdose.value=roundNumber(dose,1);
+						
+						var CL = cl_t_Array[count-1] * (Math.sqrt((sum_gus_y2 / ((count-1) * sum_gus_x2 )) - (Math.pow(dose,2)/ (count-1))));
+						
+						
+						var upperCL=dose +  CL; 
+						var lowerCL=dose - CL;
+
+						if (lowerCL < 0)
+						lowerCL=0;
+						formname.CL.value=roundNumber(lowerCL, 1) + " - " + roundNumber(upperCL, 1);
+						
+						
+						doseTreatment = roundNumber(formname.lymphdose.value,0);
+						if (doseTreatment >=10) 
+						{
+							document.lymphform.treatmentpage.value="treatment10gy.html";		  
+						}
+						else if (doseTreatment >= 9) 
+						{
+							document.lymphform.treatmentpage.value="treatment9gy.html";		  		  
+						}
+						else if (doseTreatment >= 8) 
+						{
+							document.lymphform.treatmentpage.value="treatment8gy.html";			  
+						}
+						else if (doseTreatment >= 7) 
+						{
+							document.lymphform.treatmentpage.value="treatment7gy.html";			  		  
+						}
+						else if (doseTreatment >= 6) 
+						{
+							document.lymphform.treatmentpage.value="treatment6gy.html";			  		  		  
+						}
+						else if (doseTreatment >= 5) 
+						{
+							document.lymphform.treatmentpage.value="treatment5gy.html";			  		  		  
+						}
+						else if (doseTreatment >= 4) 
+						{
+							document.lymphform.treatmentpage.value="treatment4gy.html";			  		  		  		  
+						}
+						else if (doseTreatment >= 3) {
+						document.lymphform.treatmentpage.value="treatment3gy.html";			  		  		  		  		  
+						}
+						else if (doseTreatment >= 2) 
+						{
+							document.lymphform.treatmentpage.value="treatment2gy.html";			  		  		  		  		  
+						}
+						else if (doseTreatment >= 1) 
+						{
+							document.lymphform.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  
+						}					   
+
+                     }
+                }
+                else { /*Goans */
+                    /*alert ("Goans"); */
+                   
+                  sum_x=0;
+                  sum_y=0;
+                  sum_xy=0;
+                  sum_x2=0;
+
+                  for (i=0; i< count; i++) {
+                    sum_x += dateArray[i];
+                    sum_y += Math.log(lymphArray[i]);
+                    sum_xy += (Math.log(lymphArray[i]) * dateArray[i]);
+                    sum_x2 += Math.pow(dateArray[i], 2);
+                  }
+                  
+                  
+                
+                  var numerator= (sum_x * sum_y) - (count * sum_xy);
+                  var denominator= Math.pow(sum_x, 2) - (count * sum_x2);
+
+                 
+                  dose=(-7.941) * (numerator/denominator);
+
+   
+                  if (dose <1){
+                    formname.lymphdose.value="0";
+                    formname.CL.value="";
+					document.lymphform.treatmentpage.value="treatment01gy.html";
+                  }
+                  else if (dose > 8) {
+                    formname.lymphdose.value=">8";
+                    formname.CL.value="";
+					document.lymphform.treatmentpage.value="treatment9gy.html";	
+                  }
+                  else {
+                    formname.lymphdose.value=roundNumber(dose,1);
+                
+                    var upperCL=1.2253 * dose;
+                    var lowerCL=0.7747 * dose;
+                    formname.CL.value=roundNumber(lowerCL, 1) + " - " + roundNumber(upperCL, 1);
+					
+					doseTreatment = roundNumber(formname.lymphdose.value,0);
+					if (doseTreatment >=10) 
+					{
+						document.lymphform.treatmentpage.value="treatment10gy.html";		  
+					}
+					else if (doseTreatment >= 9) 
+					{
+						document.lymphform.treatmentpage.value="treatment9gy.html";		  		  
+					}
+					else if (doseTreatment >= 8) 
+					{
+						document.lymphform.treatmentpage.value="treatment8gy.html";			  
+					}
+					else if (doseTreatment >= 7) 
+					{
+						document.lymphform.treatmentpage.value="treatment7gy.html";			  		  
+					}
+					else if (doseTreatment >= 6) 
+					{
+						document.lymphform.treatmentpage.value="treatment6gy.html";			  		  		  
+					}
+					else if (doseTreatment >= 5) 
+					{
+						document.lymphform.treatmentpage.value="treatment5gy.html";			  		  		  
+					}
+					else if (doseTreatment >= 4) 
+					{
+						document.lymphform.treatmentpage.value="treatment4gy.html";			  		  		  		  
+					}
+					else if (doseTreatment >= 3) {
+					document.lymphform.treatmentpage.value="treatment3gy.html";			  		  		  		  		  
+					}
+					else if (doseTreatment >= 2) 
+					{
+						document.lymphform.treatmentpage.value="treatment2gy.html";			  		  		  		  		  
+					}
+					else if (doseTreatment >= 1) 
+					{
+						document.lymphform.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  
+					}						
+                  }
+				  
+				  
+                }
+                
+             }
+ 
+           } 
+      
+
+         
+     
+   }
+
+   function roundNumber(num, dec) 
+   {
+	 var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	 return result;
+   }
+
+   function sinh(num){
+
+      return (Math.exp(num) - Math.exp(-num))/2;
+   }
+
+   function cosh(num) {
+      return (Math.exp(num) + Math.exp(-num))/2;
+   }
+
+   function tanh (num) {
+      return sinh(num) / cosh(num);
+
+   }
+
+    function vomitdose()
+    {
+       if (document.vomit.onsetvomit.selectedIndex==1) {
+          document.vomit.dosevomit.value="> 10 Gy";
+          document.vomit.percentvomit.value="100%";
+		  document.vomit.treatmentpage.value="treatment10gy.html";		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==2) {
+          document.vomit.dosevomit.value="9 Gy";
+          document.vomit.percentvomit.value="100%";
+		  document.vomit.treatmentpage.value="treatment9gy.html";		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==3) {
+          document.vomit.dosevomit.value="8 Gy";
+          document.vomit.percentvomit.value="99%";
+		  document.vomit.treatmentpage.value="treatment8gy.html";			  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==4) {
+          document.vomit.dosevomit.value="7 Gy";
+          document.vomit.percentvomit.value="98%";
+		  document.vomit.treatmentpage.value="treatment7gy.html";			  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==5) {
+          document.vomit.dosevomit.value="6 Gy";
+          document.vomit.percentvomit.value="94%";
+		  document.vomit.treatmentpage.value="treatment6gy.html";			  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==6) {
+          document.vomit.dosevomit.value="5 Gy";
+          document.vomit.percentvomit.value="86%";
+ 		  document.vomit.treatmentpage.value="treatment5gy.html";			  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==7) {
+          document.vomit.dosevomit.value="4 Gy";
+          document.vomit.percentvomit.value="72%";
+ 		  document.vomit.treatmentpage.value="treatment4gy.html";			  		  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==8) {
+          document.vomit.dosevomit.value="3 Gy";
+          document.vomit.percentvomit.value="54%";
+ 		  document.vomit.treatmentpage.value="treatment3gy.html";			  		  		  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==9) {
+          document.vomit.dosevomit.value="< 2 Gy";
+          document.vomit.percentvomit.value="35%";
+  		  document.vomit.treatmentpage.value="treatment2gy.html";			  		  		  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==0) {
+          document.vomit.dosevomit.value="";
+  		  document.vomit.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  
+       }
+
+    }
+
+
+
+    function lymphocytedose(formname)
+    {
+      var k;
+      var totaldays;
+
+      if (formname.L1.value=="2.45" && formname.L2.value=="") {
+         alert("Enter a value for lymphocyte count.");
+         return;
+      }
+      else if (formname.L1.value=="" || formname.L2.value=="") {
+         alert("Enter values for both Initial and Second Lymphocyte Count.");
+         return;
+      }
+      if (formname.dayvalue.value=="")
+         formname.dayvalue.value="0";
+      if (formname.hourvalue.value=="")
+         formname.hourvalue.value="0"; 
+
+      while (formname.dayvalue.value !="0" && formname.dayvalue.value.indexOf('0')==0)
+           formname.dayvalue.value=formname.dayvalue.value.substring(1);
+
+      while (formname.hourvalue.value !="0" && formname.hourvalue.value.indexOf('0')==0)
+           formname.hourvalue.value=formname.hourvalue.value.substring(1);
+
+      if (formname.dayvalue.value=="0" && formname.hourvalue.value=="0"){
+         alert("Enter a value for Time interval.");
+         return;
+      }
+      totaldays=(parseFloat(formname.dayvalue.value)*24 + parseFloat(formname.hourvalue.value))/24;
+      k=(Math.log(formname.L1.value/formname.L2.value))/totaldays;
+      
+   /*   formname.k.value=k; */
+      if (k<0.126)
+	  {
+         formname.lymphdose.value="< 1 Gy";
+    	 formname.treatmentpage.value="treatment01gy.html";		 
+	  }
+      else if (k < 0.252 && k >=0.126)
+	  {
+         formname.lymphdose.value="1 - 2 Gy";
+    	 formname.treatmentpage.value="treatment2gy.html";		 		 
+ 	  }
+      else if (k < 0.378 && k >=0.252)
+	  {
+         formname.lymphdose.value="2 - 3 Gy";
+    	 formname.treatmentpage.value="treatment3gy.html";		 		 
+ 	  }
+      else if (k < 0.504 && k >=0.378)
+	  {
+         formname.lymphdose.value="3 - 4 Gy";
+    	 formname.treatmentpage.value="treatment4gy.html";		 		 
+ 	  }
+      else if (k < 0.63 && k >=0.504)
+	  {
+         formname.lymphdose.value="4 - 5 Gy";
+    	 formname.treatmentpage.value="treatment5gy.html";		 		 
+ 	  }
+      else if (k < 0.756 && k >= 0.63)
+	  {
+         formname.lymphdose.value="5 - 6 Gy";
+    	 formname.treatmentpage.value="treatment6gy.html";		 		 
+ 	  } 
+      else if (k < 0.881 && k >=0.756)
+	  {
+         formname.lymphdose.value="6 - 7 Gy";
+    	 formname.treatmentpage.value="treatment7gy.html";		 		 
+ 	  } 
+      else if (k < 1.01 && k >=0.881)
+	  {
+         formname.lymphdose.value="7 - 8 Gy";
+    	 formname.treatmentpage.value="treatment8gy.html";		 		 
+ 	  } 
+      else if (k < 1.13 && k >= 1.01)
+	  {
+         formname.lymphdose.value="8 - 9 Gy";
+    	 formname.treatmentpage.value="treatment9gy.html";		 		 
+ 	  } 	 
+      else if (k < 1.26 && k >=1.13)
+	  {
+         formname.lymphdose.value="9 - 10 Gy";
+    	 formname.treatmentpage.value="treatment10gy.html";		 		 
+ 	  } 
+      else
+	  {
+         formname.lymphdose.value="> 10 Gy";
+    	 formname.treatmentpage.value="treatment10gy.html";		 		 
+   	  }		 
+
+
+    }
+
+	
+    function getRx()
+    {
+       document.location.href=document.lymphform.treatmentpage.value;
+       //document.location.href='http://www.yahoo.com';
+       
+     }
+    //-->
+</SCRIPT>
+	
+	
+<head>
+	<title>REMM</title>
+		<link rel=StyleSheet href="style.css" type="text/css">	
+
+		<META name="HandheldFriendly" content="True">
+	<META name = "viewport" content = "width=300; user-scalable=1" >
+</head>
+
+<body  leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<a href="index.html"><img src="images/remm_logo_nlm.png" alt="Radiation Emergency Medical Management (REMM)" border="0"></a><br>
+  <a href="index.html"><img src="images/home.png" border="0" ></a><img src="images/greaterthan.png" border="0" >
+<a href="doseestimator.html"><img src="images/doseestimator.png" border="0" ></a> 
+
+<font face="Arial, Verdana" size="2"><h4>Lymphocyte Depletion Kinetics</h4></font> 
+<h5><font face="Arial, Verdana">For one or more blood specimens</font></h5>
+
+
+
+<a href="#caution2specimen"><img src="images/cautioncountermeasure.png" alt="caution" width="75" height="18" border="0"></a>
+<form name=lymphform onSubmit="javascript:return false;">
+<input name="treatmentpage" type="hidden" size="15" class="texttreatment" title="Treatment" > 	
+
+<font size="2" face="Arial, Verdana">
+</font><p><font size="2" face="Arial, Verdana">
+1. Date | Time of Exposure:<br>
+<input type="text" size="9" value="" name="date2x"/>
+|
+<input type="text" size="5" value="" name="hour2x"/>
+<br>
+<img src="images/exampledoseest.png" alt="Example"> <br>
+
+2. Date | Time | Lymphocyte count<br>
+from one or more blood samples:<br>
+<!-- --><input type="text" size="9" value="" name="date2xx"/>
+| 
+<input type="text" size="5" value="" name="hour2xx"/> 
+|
+
+<input type=text name="L1" size="3" value=""/>
+<img src="images/10super9cells.png" > <br>
+<!-- --><input type="text" size="9" value="" name="date2xxx"/>
+| 
+<input type="text" size="5" value="" name="hour2xxx"/> 
+| 
+
+<input type="text" name="L2" size="3" value=""/>
+<img src="images/10super9cells.png" ><br>
+<!-- --><input type="text" size="9" value="" name="date2xxxx"/>
+| 
+<input type="text" size="5" value="" name="hour2xxxx"/> 
+| 
+
+<input type="text" name="L3" size="3" value=""/>
+<img src="images/10super9cells.png" >
+<br> 
+<img src="images/exampleldk.png" alt="Example">
+<br>
+<!--3. Lymphocyte count:<br>
+<input type=text name="L1" size="5" value=""/>
+<img src="images/10super9cells.png" ><br>
+<input type="text" name="L2" size="5" value=""/>
+<img src="images/10super9cells.png" ><br>
+<input type="text" name="L3" size="5" value=""/>
+<img src="images/10super9cells.png" >
+<br> -->
+
+3. <input type="button" onClick="javascript:lymphocyte2dose(this.form);" value="Estimate exposure dose"/>  <br>
+
+4. 
+<input class="textdose" type="text" readonly="readonly" name="lymphdose" size="7"/>
+Gy is the estimated dose <br>
+<input class="textdose" type="text" readonly="readonly" name="CL" size="7"/>
+  Gy <a href="95cllymphocyte.html">95% confidence limits</a>    <br>
+            <br>
+5. 
+            <input type="button" value="Get suggested treatment" name="Rxbutton" onClick="javascript:getRx();">  
+            for <b>hematopoietic subsyndrome</b> based on this dose.<br>
+
+<a name="caution2specimen"></a>
+<br>
+<font size="2" face="Arial, Verdana" color="red"><strong>Note</strong>:  <br>
+See the following for additional details: <br>
+</font>
+http://remm.nlm.gov/aboutlymphocytedepletion.htm <br>
+
+<!--<img src="images/ldk2footnote.png" > -->
+</font></p>
+                
+
+</form>
+<p>
+<a href="disclaimer.html#doseestimator">Disclaimers</a> <a href="credits.html">Credits</a></p>
+<p><font face="Arial, Verdana" size="2">&lt;&lt; <a href="index.html">Home</a></font></p>
+
+</BODY>
+</HTML>
+

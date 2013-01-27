@@ -1,0 +1,91 @@
+body {
+        color: #333333;
+		margin-left:4px;
+		margin-top: 4px;
+        //padding: 5px ;
+        font-family:  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        font-size: x-small;
+       
+        //line-height:1.5em;
+}
+
+html {
+        height:100%;
+}
+
+
+.h1 {
+        color: #00573c;
+        margin: 0px;
+        padding: 5px 0px 10px 0px;
+        font-family:  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        font-size:  x-small ; 
+        font-weight: bold;
+        line-height:1.5 em;
+}
+
+.h2 {
+        color: #0057c3;
+        margin: 0px;
+        padding: 5px 0px 10px 0px;
+        font-family:  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        font-size:  x-small; 
+        font-weight: bold;
+        line-height:1.5 em;
+}
+
+
+p {
+       margin-top: 0px;
+       margin-bottom: 10px;
+   }
+
+ul  {
+  padding: 0px;
+  margin-top: 5px;
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+   
+
+.boldtext {
+   color:#00573c;
+   font-weight: bold;
+   
+}
+
+a:link {
+color: #4C72A1;
+text-decoration:underline;
+line-height:1.5em;
+}
+
+a:visited {
+color: #8E388E;
+text-decoration:underline;
+}
+
+a:hover {
+color: #0057c3;
+text-decoration:underline;
+}
+
+a:active {
+color: #4C72A1;
+text-decoration:underline;
+}
+
+.iphone {
+    margin:0;
+    border-bottom: 1px solid #E0E0E0;
+    padding:0;
+    background: url(iPhoneArrow.png) no-repeat right center;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 2 em;
+}
+.iphone img {
+  padding-right:4px;
+}
+
+

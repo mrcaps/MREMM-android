@@ -1,0 +1,459 @@
+
+<html>
+<!--Javascript starts here -->
+<SCRIPT language=JavaScript type=text/javascript>
+    <!--
+
+
+    function vomitdose()
+    {
+       if (document.vomit.onsetvomit.selectedIndex==1) {
+          document.vomit.dosevomit.value="> 10 Gy";
+          document.vomit.percentvomit.value="100%";
+		  document.vomit.treatmentpage.value="treatment10gy.html";		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==2) {
+          document.vomit.dosevomit.value="9 Gy";
+          document.vomit.percentvomit.value="100%";
+		  document.vomit.treatmentpage.value="treatment9gy.html";		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==3) {
+          document.vomit.dosevomit.value="8 Gy";
+          document.vomit.percentvomit.value="99%";
+		  document.vomit.treatmentpage.value="treatment8gy.html";			  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==4) {
+          document.vomit.dosevomit.value="7 Gy";
+          document.vomit.percentvomit.value="98%";
+		  document.vomit.treatmentpage.value="treatment7gy.html";			  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==5) {
+          document.vomit.dosevomit.value="6 Gy";
+          document.vomit.percentvomit.value="94%";
+		  document.vomit.treatmentpage.value="treatment6gy.html";			  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==6) {
+          document.vomit.dosevomit.value="5 Gy";
+          document.vomit.percentvomit.value="86%";
+ 		  document.vomit.treatmentpage.value="treatment5gy.html";			  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==7) {
+          document.vomit.dosevomit.value="4 Gy";
+          document.vomit.percentvomit.value="72%";
+ 		  document.vomit.treatmentpage.value="treatment4gy.html";			  		  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==8) {
+          document.vomit.dosevomit.value="3 Gy";
+          document.vomit.percentvomit.value="54%";
+ 		  document.vomit.treatmentpage.value="treatment3gy.html";			  		  		  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==9) {
+          document.vomit.dosevomit.value="< 2 Gy";
+          document.vomit.percentvomit.value="35%";
+  		  document.vomit.treatmentpage.value="treatment2gy.html";			  		  		  		  		  
+       }
+       else if (document.vomit.onsetvomit.selectedIndex==0) {
+          document.vomit.dosevomit.value="";
+  		  document.vomit.treatmentpage.value="treatment01gy.html";			  		  		  		  		  		  
+       }
+
+    }
+
+
+
+    function lymphocytedose(formname)
+    {
+      var k;
+      var totaldays;
+
+      if (formname.L1.value=="2.45" && formname.L2.value=="") {
+         alert("Enter a value for lymphocyte count.");
+         return;
+      }
+      else if (formname.L1.value=="" || formname.L2.value=="") {
+         alert("Enter values for both Initial and Second Lymphocyte Count.");
+         return;
+      }
+      if (formname.dayvalue.value=="")
+         formname.dayvalue.value="0";
+      if (formname.hourvalue.value=="")
+         formname.hourvalue.value="0"; 
+
+      while (formname.dayvalue.value !="0" && formname.dayvalue.value.indexOf('0')==0)
+           formname.dayvalue.value=formname.dayvalue.value.substring(1);
+
+      while (formname.hourvalue.value !="0" && formname.hourvalue.value.indexOf('0')==0)
+           formname.hourvalue.value=formname.hourvalue.value.substring(1);
+
+      if (formname.dayvalue.value=="0" && formname.hourvalue.value=="0"){
+         alert("Enter a value for Time interval.");
+         return;
+      }
+      totaldays=(parseFloat(formname.dayvalue.value)*24 + parseFloat(formname.hourvalue.value))/24;
+      k=(Math.log(formname.L1.value/formname.L2.value))/totaldays;
+      
+   /*   formname.k.value=k; */
+      if (k<0.126)
+	  {
+         formname.lymphdose.value="< 1 Gy";
+    	 formname.treatmentpage.value="treatment01gy.html";		 
+	  }
+      else if (k < 0.252 && k >=0.126)
+	  {
+         formname.lymphdose.value="1 - 2 Gy";
+    	 formname.treatmentpage.value="treatment2gy.html";		 		 
+ 	  }
+      else if (k < 0.378 && k >=0.252)
+	  {
+         formname.lymphdose.value="2 - 3 Gy";
+    	 formname.treatmentpage.value="treatment3gy.html";		 		 
+ 	  }
+      else if (k < 0.504 && k >=0.378)
+	  {
+         formname.lymphdose.value="3 - 4 Gy";
+    	 formname.treatmentpage.value="treatment4gy.html";		 		 
+ 	  }
+      else if (k < 0.63 && k >=0.504)
+	  {
+         formname.lymphdose.value="4 - 5 Gy";
+    	 formname.treatmentpage.value="treatment5gy.html";		 		 
+ 	  }
+      else if (k < 0.756 && k >= 0.63)
+	  {
+         formname.lymphdose.value="5 - 6 Gy";
+    	 formname.treatmentpage.value="treatment6gy.html";		 		 
+ 	  } 
+      else if (k < 0.881 && k >=0.756)
+	  {
+         formname.lymphdose.value="6 - 7 Gy";
+    	 formname.treatmentpage.value="treatment7gy.html";		 		 
+ 	  } 
+      else if (k < 1.01 && k >=0.881)
+	  {
+         formname.lymphdose.value="7 - 8 Gy";
+    	 formname.treatmentpage.value="treatment8gy.html";		 		 
+ 	  } 
+      else if (k < 1.13 && k >= 1.01)
+	  {
+         formname.lymphdose.value="8 - 9 Gy";
+    	 formname.treatmentpage.value="treatment9gy.html";		 		 
+ 	  } 	 
+      else if (k < 1.26 && k >=1.13)
+	  {
+         formname.lymphdose.value="9 - 10 Gy";
+    	 formname.treatmentpage.value="treatment10gy.html";		 		 
+ 	  } 
+      else
+	  {
+         formname.lymphdose.value="> 10 Gy";
+    	 formname.treatmentpage.value="treatment10gy.html";		 		 
+   	  }		 
+
+
+    }
+    function cytodose()
+    {
+       if (document.cytogeneticsform.dicentrics.selectedIndex==1)
+	   {
+          document.cytogeneticsform.dosecyto.value="0 Gy";		  
+	   }
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==2)
+	   {
+          document.cytogeneticsform.dosecyto.value="0 - 1 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment01gy.html";		 		  
+	   }		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==3)
+	   {
+          document.cytogeneticsform.dosecyto.value="1 - 2 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment2gy.html";		 		  
+	   }		  
+	   else if (document.cytogeneticsform.dicentrics.selectedIndex==4)
+	   {
+          document.cytogeneticsform.dosecyto.value="2 - 3 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment3gy.html";		 		  
+	   }		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==5)
+	   {
+          document.cytogeneticsform.dosecyto.value="3 - 4 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment4gy.html";		 		  
+	   }		  		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==6)
+	   {
+          document.cytogeneticsform.dosecyto.value="4 - 5 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment5gy.html";		 		  
+	   }		  		  		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==7)
+	   {
+          document.cytogeneticsform.dosecyto.value="> 5 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment5gy.html";		 		  
+	   }		  		  		  		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==0)
+          document.cytogeneticsform.dosecyto.value="";
+    }
+	
+    function getRx(formname)
+    {
+        var dose;
+        var doseGy;
+        var i;
+        var j;
+
+    
+        if (formname=="v") {
+           if (document.vomit.dosevomit.value==""){
+              alert("Select a value for onset of vomiting, then click the Calculate button.");
+              return;
+           }
+           dose=document.vomit.dosevomit.value;
+        }
+        else if (formname=="l_2") {
+           if (document.lymphform.lymphdose.value==""){
+              alert("Enter values for the two lymphocyte counts and the time interval, then click the Calculate button");
+              return;
+           }
+           dose=document.lymphform.lymphdose.value;
+
+        }
+        else if (formname=="l_1") {
+           if (document.lymphform1.lymphdose.value==""){
+              alert("Enter values for the two lymphocyte counts and the time interval, then click the Calculate button");
+              return;
+           }
+           dose=document.lymphform1.lymphdose.value;
+
+        }
+        else if (formname=="c") {
+           if (document.cytogeneticsform.dosecyto.value==""){
+              alert("Select a value for the number of decentrics, then click the Calculate button.");
+              return;
+           }
+           dose=document.cytogeneticsform.dosecyto.value;
+        }
+        else
+           dose=formname;
+
+        if (dose.indexOf('<')!=-1)
+           doseGy=dose.substring(2);
+        else if (dose.indexOf('>')!=-1)
+           doseGy=dose.substring(2);
+        else if (dose.indexOf('-')!=-1)
+           doseGy=dose.substring(4);
+        else
+           doseGy=dose;
+/*
+        doseGy=doseGy + "|" +dose +"|";
+        if (formname=="v")
+            doseGy+="onset of vomiting";
+        if (formname=="l")
+            doseGy+="lymphocyte depletion kinetics";
+        if (formname=="c")
+            doseGy+="dicentric chromosomes";
+       
+        setCookie('biodose', doseGy, null, '/', null, null);
+        document.location.href="ars_dose.htm";
+*/
+       resetcolor();
+       if (dose=="> 5 Gy"){
+          change("6_Gy", "second");change("6_Gy_img", "visible");
+          change("7_Gy", "second");change("7_Gy_img", "visible");
+          change("8_Gy", "second");change("8_Gy_img", "visible");
+          change("9_Gy", "second");change("9_Gy_img", "visible");
+          change("10_Gy", "second");change("10_Gy_img", "visible");
+          for (i=1; i< 5; i++) {
+             for (j=1; j<5; j++) {
+                change(("6_Gy"+"_" + i.toString() + "_" + j.toString()), "visible");
+                change(("7_Gy"+"_" + i.toString() + "_" + j.toString()), "visible");
+                change(("8_Gy"+"_" + i.toString() + "_" + j.toString()), "visible");
+                change(("9_Gy"+"_" + i.toString() + "_" + j.toString()), "visible");
+                change(("10_Gy"+"_" + i.toString() + "_" + j.toString()), "visible");
+             }
+          }
+       }
+       else {
+          change(doseGy.replace(" ", "_"), "second");
+          change((doseGy.replace(" ", "_")+"_img"), "visible"); 
+
+          for (i=1; i< 5; i++) {
+             for (j=1; j<5; j++) {
+                change((doseGy.replace(" ", "_")+"_" + i.toString() + "_" + j.toString()), "visible");
+             }
+          }
+       }
+
+       document.location.href=document.lymphform.treatmentpage.value;
+       //document.location.href='http://www.yahoo.com';
+       
+     }
+
+
+
+function setCookie(name, value, expires, path, domain, secure) {
+
+  var curCookie = name + "=" + escape(value) +
+      ((expires) ? "; expires=" + expires.toGMTString() : "") +
+      ((path) ? "; path=" + path : "") +
+      ((domain) ? "; domain=" + domain : "") +
+      ((secure) ? "; secure" : "");
+  document.cookie = curCookie;
+}
+
+function getCookie(name) {
+  var dc = document.cookie;
+  var prefix = name + "=";
+  var begin = dc.indexOf("; " + prefix);
+  if (begin == -1) {
+    begin = dc.indexOf(prefix);
+    if (begin != 0) return null;
+  } else
+    begin += 2;
+  var end = document.cookie.indexOf(";", begin);
+  if (end == -1)
+    end = dc.length;
+  return unescape(dc.substring(begin + prefix.length, end));
+}
+
+function deleteCookie(name, path, domain) {
+  if (getCookie(name)) {
+    document.cookie = name + "=" +
+    ((path) ? "; path=" + path : "") +
+    ((domain) ? "; domain=" + domain : "") +
+    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+  }
+}
+
+
+function change(id, newClass) {
+
+   identity=document.getElementById(id);
+   if (identity)
+      identity.className=newClass;
+
+
+
+
+}
+
+function resetcolor(){
+var id;
+var i; var j; var k;
+var imgid;
+  for (i=1; i<11; i++)
+  {
+    id=i+"_Gy";
+    change(id, "first");
+  }
+  for (i=1; i<11; i++)
+  {
+    id=i+"_Gy_img";
+    change(id, "hidden");
+  }
+  
+  for (i=1; i< 11; i++) {
+    for (j=1; j<5; j++) {
+       for (k=1; k<5; k++) {
+          id=i.toString()+"_Gy"+"_"+ j.toString() + "_" + k.toString() ;
+         
+          change(id, "hidden");
+       }
+    }
+ }
+}
+
+
+function showall(){
+var id;
+var i; var j; var k;
+  resetcolor();
+  for (i=1; i< 11; i++) {
+    for (j=1; j<5; j++) {
+       for (k=1; k<5; k++) {
+          id=i.toString()+"_Gy"+"_"+ j.toString() + "_" + k.toString() ;
+         
+          change(id, "visible");
+       }
+    }
+  }
+}
+
+    //-->
+</SCRIPT>
+	
+	
+<head>
+	<title>REMM</title>
+		<link rel=StyleSheet href="style.css" type="text/css">	
+
+		<META name="HandheldFriendly" content="True">
+	<META name = "viewport" content = "width=235; user-scalable=1" >
+
+</head>
+
+<body  leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<a href="index.html"><img src="images/remm_logo_nlm.png" alt="Radiation Emergency Medical Management (REMM)" border="0"></a><br>
+  <a href="index.html"><img src="images/home.png" border="0" ></a><img src="images/greaterthan.png" border="0" >
+<a href="doseestimator.html"><img src="images/doseestimator.png" border="0" ></a> 
+
+<font face="Arial, Verdana" size="2">
+<h4>Potential Indications For the Dicentric Chromosome Assay</h4>
+
+<ul>
+
+<li><b>Acute event triage and management </b></li>
+
+   <ul>
+
+   <li>The dicentric chromosome assay is the current "gold standard" for biodosimetry although results may not be available for days to weeks, especially in a mass casualty event.</li>
+
+      <ul>
+
+      <li>To facilitate more rapid analysis, as few as 20 metaphases may be scored to provide a preliminary estimate of dose, although scoring 50 probably provides a more accurate result. Scoring should be increased to 50 cells where there is disagreement with the initial assessments or evidence of significantly inhomogeneous exposure.</li>
+
+      <li>Dose-related effects of radiation are seen if blood for chromosomal analysis is drawn <b>at least 24 hours after exposure</b>, but useful information can probably be obtained if the blood is drawn within a few weeks. </li>
+
+      </ul>
+
+   <li><b>Victims with a potential whole body dose in the range of 1.5-3 Gy</b> </li>
+
+      <ul>
+
+      <li>May be at risk for the ARS hematological subsyndrome and lymphocyte depletion kinetics may not be as accurate as the dicentric assay in estimating dose in this range, especially if radiation exposure occurred over a few days.</li>
+
+      <li>May develop cytopenias 21-28 days after exposure and they should be triaged to a medical facility with expertise in radiation medicine. The assay may help evaluate these patients.</li>
+
+      </ul>
+
+   <li><b>Victims with a potential whole body dose higher than 1-3 Gy </b>
+
+      <ul>
+
+      <li>May become symptomatic and pancytopenic before the results of the dicentric assay become available. Nevertheless, dicentric assay results will provide useful confirmatory information</li>
+
+      </ul>
+
+   </ul>
+
+   
+
+<li><b>Risk assessment for carcinogenicity</b> </li>
+
+   <ul>
+
+   <li>Although there are currently no known effective interventions to prevent cancer, an exposure-based risk assessment may be useful in directing follow-up.</li>
+
+   <li>If a victim's dose from exposure is estimated to have been <0.25 Gy, he/she will have a very low additional lifetime risk of cancer from radiation exposure. Special follow-up based on radiation exposure is not recommended for these individuals.</li>
+
+   <li>Victims whose dicentric assay suggests a whole body dose between 0.25-1 Gy are unlikely to develop significant ARS, but have a low (but measurable) risk for radiation-induced cancer. Such individuals require long term follow-up.</li>
+
+   <li>The dicentric assay may be useful for evaluating the large number of individuals in a mass casualty event who were not ill but who received some exposure, perhaps > 1 Gy. Results can provide information about potential future risk and help generate  guidance about monitoring and follow-up.</li>
+
+   </ul>
+
+</ul>
+
+<p></p>
+</font>
+
+<p><font face="Arial, Verdana" size="2">&lt;&lt; <a href="index.html">Home</a></font></p>
+</font>
+</BODY>
+</HTML>

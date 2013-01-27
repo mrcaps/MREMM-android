@@ -1,0 +1,188 @@
+
+<html>
+<!--Javascript starts here -->
+<SCRIPT language=JavaScript type=text/javascript>
+    <!--
+
+    function computetimelapse(date1, date2, time1, time2) 
+	{
+        var timestr1= date1 + " " + time1 + ":00";
+        var timestr2= date2 + " " + time2 + ":00";
+        var d1=new Date(timestr1);
+        var d2=new Date(timestr2);
+        var minutes=1000*60;
+        var diff=(d2.getTime() - d1.getTime())/minutes;
+           
+        return diff;
+    }
+	
+    function cytodose()
+    {
+	
+	
+	var lapse = computetimelapse(document.cytogeneticsform.date3x.value, document.cytogeneticsform.date3xx.value, document.cytogeneticsform.hour3x.value, document.cytogeneticsform.hour3xx.value);
+	var day = 24 * 60;
+	var weeks = 24 * 60 * 4 * 7;
+	
+	if (lapse <= day) 
+	{
+		alert("Blood sample should be taken at least 24 hours after exposure."); 
+		document.cytogeneticsform.dosecyto.value="";
+		return;
+	}
+	else if (lapse > weeks) 
+	{
+		alert ("No calculation is provided for sample taken 4 weeks after exposure.  It is necessary to enter a time correction factor which is provided by the cytogenetics laboratory.");
+		document.cytogeneticsform.dosecyto.value="";
+		return;
+	
+	}
+
+	
+       if (document.cytogeneticsform.dicentrics.selectedIndex==1)
+	   {
+          document.cytogeneticsform.dosecyto.value="0 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="";			  		  
+	   }
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==2)
+	   {
+          document.cytogeneticsform.dosecyto.value="0 - 1 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment01gy.html";		 		  
+	   }		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==3)
+	   {
+          document.cytogeneticsform.dosecyto.value="1 - 2 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment2gy.html";		 		  
+	   }		  
+	   else if (document.cytogeneticsform.dicentrics.selectedIndex==4)
+	   {
+          document.cytogeneticsform.dosecyto.value="2 - 3 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment3gy.html";		 		  
+	   }		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==5)
+	   {
+          document.cytogeneticsform.dosecyto.value="3 - 4 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment4gy.html";		 		  
+	   }		  		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==6)
+	   {
+          document.cytogeneticsform.dosecyto.value="4 - 5 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment5gy.html";		 		  
+	   }		  		  		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==7)
+	   {
+          document.cytogeneticsform.dosecyto.value="> 5 Gy";
+      	  document.cytogeneticsform.treatmentpage.value="treatment5gy.html";		 		  
+	   }		  		  		  		  		  
+       else if (document.cytogeneticsform.dicentrics.selectedIndex==0)
+          document.cytogeneticsform.dosecyto.value="";
+    }
+	
+    function getRx(formname)
+    {
+        var dose;
+        var doseGy;
+        var i;
+        var j;
+
+    
+        if (formname=="v") {
+           if (document.vomit.dosevomit.value==""){
+              alert("Select a value for onset of vomiting, then click the Calculate button.");
+              return;
+           }
+           dose=document.vomit.dosevomit.value;
+        }
+        else if (formname=="l_2") {
+           if (document.lymphform.lymphdose.value==""){
+              alert("Enter values for the two lymphocyte counts and the time interval, then click the Calculate button");
+              return;
+           }
+           dose=document.lymphform.lymphdose.value;
+
+        }
+        else if (formname=="l_1") {
+           if (document.lymphform1.lymphdose.value==""){
+              alert("Enter values for the two lymphocyte counts and the time interval, then click the Calculate button");
+              return;
+           }
+           dose=document.lymphform1.lymphdose.value;
+
+        }
+        else if (formname=="c") {
+           if (document.cytogeneticsform.dosecyto.value==""){
+              alert("Select a value for the number of decentrics, then click the Calculate button.");
+              return;
+           }
+           dose=document.cytogeneticsform.dosecyto.value;
+        }
+        else
+           dose=formname;
+
+        if (dose.indexOf('<')!=-1)
+           doseGy=dose.substring(2);
+        else if (dose.indexOf('>')!=-1)
+           doseGy=dose.substring(2);
+        else if (dose.indexOf('-')!=-1)
+           doseGy=dose.substring(4);
+        else
+           doseGy=dose;
+
+
+	document.location.href=document.cytogeneticsform.treatmentpage.value;      
+     }
+
+    //-->
+</SCRIPT>
+	
+	
+<head>
+	<title>REMM</title>
+		<link rel=StyleSheet href="style.css" type="text/css">	
+
+		<META name="HandheldFriendly" content="True">
+	<META name = "viewport" content = "width=235; user-scalable=1" >
+</head>
+
+<body  leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<a href="index.html"><img src="images/remm_logo_nlm.png" alt="Radiation Emergency Medical Management (REMM)" border="0"></a><br>
+  <a href="index.html"><img src="images/home.png" border="0" ></a><img src="images/greaterthan.png" border="0" >
+<a href="doseestimator.html"><img src="images/doseestimator.png" border="0" ></a> 
+
+<font face="Arial, Verdana" size="2">
+<h4> Dicentric Chromosome Assay</h4>
+
+<a href="#caution"><img src="images/cautioncountermeasure.png" alt="caution" width="75" height="18" border="0"></a><br>
+
+<h4> Where to send biodosimetry specimens? </h4>
+
+<ul>
+<li><b>Armed Forces Radiobiology Research Institute (AFRRI)</b><br>
+http://www.afrri.usuhs.mil<br>
+8901 Wisconsin Avenue<br>
+Bethesda, MD 20889-5603<br>
+Contact Security in Emergencies: <br>1-301-295-0530<br>
+Medical Radiology Advisory Team: <br>1-301-295-0316<br>
+<br>
+</li>
+<li><b>Oak Ridge Institute for Science and Education</b>,<br>
+<b>Radiation Emergency Assistance Center/Training Site (REAC/TS) </b><br>
+<b>Cytogenetic Biodosimetry Laboratory</b><br>
+http://orise.orau.gov/reacts/cytogenetics-lab.htm<br>
+Attn: Dr. Doran Christensen/Dr. Gordon Livingston <br>
+P.O. Box 117, MS 39 <br>
+Oak Ridge, TN 37831-0117 <br>
+Emergency: DOE/ORO: <br>1-865-576-1005 (ask for REAC/TS), this is also the after hours number<br>
+At other times: <br>1-865-576-3131 (between 8:30-4:30 CST)<br><br>
+<a name="caution"></a>
+<font size="2" face="Arial, Verdana" color="red">     
+<strong>Note</strong>: See the following for additional details: http://remm.nlm.gov/</font></li>
+</ul>
+
+</font>
+<p>
+<a href="disclaimer.html#doseestimator">Disclaimers</a> <a href="credits.html">Credits</a></p>
+<p><font face="Arial, Verdana" size="2">&lt;&lt; <a href="index.html">Home</a></font></p>
+
+</BODY>
+</HTML>
